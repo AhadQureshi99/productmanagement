@@ -7,13 +7,8 @@ export default async function handler(req, res) {
     });
   }
 
-  const slug = req.query.slug || [];
-  const path = Array.isArray(slug) ? slug.join("/") : String(slug);
-  const query = req.url.split("?")[1] || "";
-  const dest = `${BACKEND_URL.replace(/\/$/, "")}/${path}${
-    query ? `?${query}` : ""
-  }`;
-
+  const { id } = req.query;
+  const url = `${BACKEND_URL}/api/products/${id}`;
   const headers = { ...req.headers };
   delete headers.host;
 
@@ -24,7 +19,7 @@ export default async function handler(req, res) {
     body = Buffer.concat(chunks.length ? chunks : []);
   }
 
-  const forwarded = await fetch(dest, {
+  const forwarded = await fetch(url, {
     method: req.method,
     headers,
     body,
