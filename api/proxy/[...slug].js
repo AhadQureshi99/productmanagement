@@ -1,5 +1,12 @@
 export default async function handler(req, res) {
-  const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
+  const BACKEND_URL = process.env.BACKEND_URL;
+  if (!BACKEND_URL) {
+    return res.status(500).json({
+      error:
+        "BACKEND_URL environment variable not set. Add it to Vercel project settings.",
+    });
+  }
+
   const slug = req.query.slug || [];
   const path = Array.isArray(slug) ? slug.join("/") : String(slug);
   const query = req.url.split("?")[1] || "";
